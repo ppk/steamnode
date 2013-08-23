@@ -9,6 +9,7 @@ user = require('./routes/user')
 http = require('http')
 path = require('path')
 
+
 app = express()
 
 # all environments
@@ -28,6 +29,7 @@ if ('development' == app.get('env'))
 
 app.get('/', routes.index)
 app.get('/users', user.list)
+app.get('/u/:user', routes.index)
 
 http.createServer(app).listen(app.get('port'), ->
   console.log('Express server listening on port ' + app.get('port'))
