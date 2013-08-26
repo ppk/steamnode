@@ -1,7 +1,7 @@
 # GET home page.
 $ = require('jquery');
 
-exports.index = (req, res) ->
+module.exports.index = (req, res) ->
 
 	ownedGamesUrl = ''
 	renderPage = () ->
