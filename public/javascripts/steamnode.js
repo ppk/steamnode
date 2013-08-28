@@ -13,6 +13,7 @@ $( function() {
 			try {
 				var cheevos = data.achievementpercentages.achievements;
 			} catch(e) {
+				$('.games tr.game_' + gameId).remove();
 				return;
 			}
 
@@ -30,7 +31,8 @@ $( function() {
 
 			$($('.games tr.game_' + gameId + ' td')[2]).text(minpercent.toString().toString().substr(0, 9));
 		}).fail(function(){
-			console.log('fail')
+			console.log('fail for ' + gameId);
+			$('.games tr.game_' + gameId).remove();
 		}).always(function(){
 			if(gameIds.length == 0) {
 				stopProcessing = true;

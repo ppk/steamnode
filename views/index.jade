@@ -2,10 +2,10 @@ extends layout
 
 block content
   script(src='/javascripts/steamnode.js')
-  h1= title + " - #" + userid 
+  h1= title 
   button.stop_processing Stop Processing
   button.clear_cache Clear Cache
-  p Games for #{title} -- #{games.length} games listed
+  p Games for #{user} -- #{games.length} games queried
   table#games.tablesorter
     thead
       tr

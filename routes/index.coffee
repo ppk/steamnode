@@ -6,14 +6,22 @@ request = require('request')
 module.exports.index = (req, res) ->
 	userGames = null
 	allGames = {}
-	userid = '76561197970525212' # dortimus
+	allGamesRaw = {}
+	username = 'everybody'
+	userid = '' #'76561197970525212' # dortimus
+	apiKey = '3B18402FDDF1F6EFB7C00A2DE4A21C1E'
+	ownedGamesUrl = ''
 	renderPage = ->
-		promise = $.getJSON(ownedGamesUrl, (data) =>
-			userGames = data.response.games
-		)
-		.done( =>
-			res.render('index', { title: username, userid: userid, games: userGames, allGames: allGames })
-		)
+		if ownedGamesUrl != ''
+			promise = $.getJSON(ownedGamesUrl, (data) =>
+				userGames = data.response.games
+			)
+			.done( =>
+				res.render('index', { title: "Games for " + username + " - #" + userid, user: username, games: userGames, allGames: allGames })
+			)
+		else
+			userGames = allGamesRaw
+			res.render('index', { title: "All Steam Games", user: username, games: userGames, allGames: allGames })
 
 	storeGameInfo = (games) ->
 		promise = null
@@ -21,13 +29,13 @@ module.exports.index = (req, res) ->
 	getAllGames = ->
 		allGamesUrl = 'http://api.steampowered.com/ISteamApps/GetAppList/v0001/?format=json'
 		$.getJSON(allGamesUrl, (data) =>
-			for game in data.applist.apps.app
-				allGames[game['appid']] = game['name']
+			allGamesRaw = data.applist.apps.app
+			for game in allGamesRaw
+					allGames[game['appid']] = game['name']
 			renderPage()
 		)
 
-	username = req.params.user || 'dortimus'
-	console.log('user is ' + username)
+	username = req.params.user
 	userurl = "http://steamcommunity.com/id/#{username}/?xml=1";
 	if req.params.user 
 		request( userurl, (err, response, body) ->
@@ -35,13 +43,12 @@ module.exports.index = (req, res) ->
 				console.log('Request error.')
 			else
 				userid = body.substring(body.indexOf('<steamID64>') + 11, body.indexOf('</steamID64>'))
+				
 				console.log("id is " + userid)
+				ownedGamesUrl = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=#{apiKey}&steamid=#{userid}&format=json"
+				getAllGames()
 		)
-
-	apiKey = '3B18402FDDF1F6EFB7C00A2DE4A21C1E'
-
-	ownedGamesUrl = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=#{apiKey}&steamid=#{userid}&format=json"
-
-	getAllGames()
+	else
+		getAllGames()
 	
 	

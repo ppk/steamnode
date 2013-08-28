@@ -15,6 +15,8 @@ module.exports.global_achievements = (req, res) ->
 
 	$.getJSON(url, (data) =>
 		res.send(data);
+	).fail( ->
+		res.send({error: "error calling steam API"});
 	)	
 	
 	
