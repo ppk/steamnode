@@ -1,8 +1,12 @@
 extends layout
 
 block content
+  script(src='/javascripts/steamnode.js')
   h1= title
-  p Welcome to #{title} -- #{games.length} games listed
-  ul
+  p Games for #{title} -- #{games.length} games listed
+  table.games
     each game in games
-        li= game.appid
+      tr(class="game_#{game.appid}")
+        td= allGames[game.appid]
+        td= game.appid
+        td= "calculating..."

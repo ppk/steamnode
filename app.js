@@ -7,6 +7,7 @@ require('coffee-script');
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var api = require('./routes/api');
 var http = require('http');
 var path = require('path');
 
@@ -31,6 +32,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/api/global_achievements/:game', api.global_achievements);
 app.get('/users', user.list);
 app.get('/u/:user', routes.index);
 
