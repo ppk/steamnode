@@ -1,16 +1,18 @@
 # GET home page.
 $ = require('jquery')
 http = require('http')
+request = require('request')
 
 module.exports.index = (req, res) ->
 	userGames = null
 	allGames = {}
+	userid = '76561197970525212' # dortimus
 	renderPage = ->
 		promise = $.getJSON(ownedGamesUrl, (data) =>
 			userGames = data.response.games
 		)
 		.done( =>
-			res.render('index', { title: username, games: userGames, allGames: allGames })
+			res.render('index', { title: username, userid: userid, games: userGames, allGames: allGames })
 		)
 
 	storeGameInfo = (games) ->
@@ -27,11 +29,17 @@ module.exports.index = (req, res) ->
 	username = req.params.user || 'dortimus'
 	console.log('user is ' + username)
 	userurl = "http://steamcommunity.com/id/#{username}/?xml=1";
+	if req.params.user 
+		request( userurl, (err, response, body) ->
+			if(err && response.statusCode != 200)
+				console.log('Request error.')
+			else
+				userid = body.substring(body.indexOf('<steamID64>') + 11, body.indexOf('</steamID64>'))
+				console.log("id is " + userid)
+		)
 
 	apiKey = '3B18402FDDF1F6EFB7C00A2DE4A21C1E'
-	userid = '76561197960435530' #data.substring(data.indexOf('<steamID64>'), data.indexOf('</steamID64>'))
 
-	#"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=3B18402FDDF1F6EFB7C00A2DE4A21C1E&steamid=76561197960435530&format=json"
 	ownedGamesUrl = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=#{apiKey}&steamid=#{userid}&format=json"
 
 	getAllGames()

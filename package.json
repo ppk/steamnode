@@ -9,6 +9,8 @@
     "express": "3.3.5",
     "jade": "*",
     "coffee-script": "1.6.3",
-    "jquery": "1.8.3"
+    "jquery": "1.8.3",
+    "jsdom": "0.2.19",
+    "request": "2.27.0"
   }
 }

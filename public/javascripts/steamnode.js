@@ -80,4 +80,11 @@ $( function() {
 		}
 
 	});
+
+	$('.clear_cache').click(function() {
+		if(typeof(Storage)!=="undefined")
+		{
+			localStorage.clear();
+		}
+	});
 })

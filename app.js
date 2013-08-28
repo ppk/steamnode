@@ -9,6 +9,9 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var api = require('./routes/api');
 var http = require('http');
+var jsdom = require('jsdom')
+var request = require('request')
+var url = require('url')
 var path = require('path');
 
 var app = express();
