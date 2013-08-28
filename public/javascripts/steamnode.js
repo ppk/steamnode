@@ -3,13 +3,18 @@ var stopProcessing = false;
 $( function() {
 	var gameIds = []
 	$.each($('.games tr'), function() {
-		gameIds.unshift($(this).attr('class').slice(5))
+		cl = $(this).attr('class')
+			gameIds.unshift(cl.slice(5))
 	});
 	var self = this;
 	getGameAchievements = function() {
 		gameId = gameIds.pop();
 		getLocalGameAchievements(gameId, function(data) {
-			var cheevos = data.achievementpercentages.achievements;
+			try {
+				var cheevos = data.achievementpercentages.achievements;
+			} catch(e) {
+				return;
+			}
 
 			storeGameAchievementsLocally(gameId, cheevos);
 			if(cheevos.length == 0) {
@@ -27,6 +32,12 @@ $( function() {
 		}).fail(function(){
 			console.log('fail')
 		}).always(function(){
+			if(gameIds.length == 0) {
+				stopProcessing = true;
+				$('.stop_processing').text("Start Processing");
+				$("#games").tablesorter();
+			}
+
 			if(!stopProcessing) {
 				getGameAchievements();
 			}
@@ -39,13 +50,17 @@ $( function() {
 			cheevos = JSON.parse(localStorage["game_" + gameId]);
 			// fake promise
 			pr = {};
-			pr.fail = function() { return pr};
+			pr.fail = function(fn) { return pr};
 			pr.always = function(fn) {fn(); return pr};
 			fn({achievementpercentages: {achievements: cheevos}});
 			return pr;
 		}
 		else {
-			return $.getJSON('/api/global_achievements/' + gameId, fn);
+			if(gameId !== "undefined") {
+				return $.getJSON('/api/global_achievements/' + gameId, fn);
+			} else {
+				console.log("why you do dat?");
+			}
 		}
 	}
 
@@ -66,7 +81,7 @@ $( function() {
 			localStorage["game_" + gameId] = JSON.stringify(achievements);
 		}
 	}
-
+ 
 	setTimeout(getGameAchievements, 200);
 	$('.stop_processing').click(function() {
 		stopProcessing = !stopProcessing;

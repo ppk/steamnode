@@ -1,14 +1,21 @@
 extends layout
 
 block content
+  script(src='/javascripts/jquery.tablesorter.js')
   script(src='/javascripts/steamnode.js')
   h1= title + " - #" + userid 
   button.stop_processing Stop Processing
   button.clear_cache Clear Cache
   p Games for #{title} -- #{games.length} games listed
-  table.games
-    each game in games
-      tr(class="game_#{game.appid}")
-        td= allGames[game.appid]
-        td= game.appid
-        td= "calculating..."
+  table#games
+    thead
+      tr
+        th Game
+        th Game ID
+        th Achievement with Lowest Percentage
+    tbody.games
+      each game in games
+        tr(class="game_#{game.appid}")
+          td= allGames[game.appid]
+          td= game.appid
+          td= "calculating..."
