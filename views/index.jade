@@ -16,5 +16,6 @@ block content
       each game in games
         tr(class="game_#{game.appid}")
           td= allGames[game.appid]
-          td= game.appid
+          td
+            a(href= "http://store.steampowered.com/app/#{game.appid}/", target="_blank")= game.appid
           td= "calculating..."
