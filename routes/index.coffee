@@ -35,9 +35,9 @@ module.exports.index = (req, res) ->
 			renderPage()
 		)
 
-	username = req.params.user
-	userurl = "http://steamcommunity.com/id/#{username}/?xml=1";
 	if req.params.user 
+		username = req.params.user
+		userurl = "http://steamcommunity.com/id/#{username}/?xml=1";
 		request( userurl, (err, response, body) ->
 			if(err && response.statusCode != 200)
 				console.log('Request error.')
